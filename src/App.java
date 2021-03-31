@@ -4,11 +4,14 @@ import java.util.Scanner;
 public class App {
 
 	protected ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
+	protected Scanner key = new Scanner(System.in);
+	
+	public void end() {
+		System.out.println("You've chosen to end the program. Goodbye!");
+		key.close();
+	}
 
-	public static void start() {
-	    System.out.println("-----------------------");
-	    System.out.println("Welcome to the Recipe Book! To begin, choose whether you would like to view, add, or delete recipes.");
-	    Scanner key = new Scanner(System.in);
+	public void start() {
 	    String choice;
 	    boolean correct = false;
 
@@ -22,21 +25,28 @@ public class App {
 	    	}
 	    } while (correct == false);
 	    
-	    key.close();
-	    
 	    if (choice.equals("ADD")) {
 	    	addRecipe();
 	    } else if (choice.equals("VIEW")) {
-	    	return;
+	    	if (recipeList.size() > 0) {
+	    		viewRecipe();
+	    	} else {
+	    		System.out.println("Sorry, there are no recipes to view.");
+	    		start();
+	    	}
 	    } else if (choice.equals("DELETE")) {
-	    	return;
+	    	if (recipeList.size() > 0) {
+		    	// find recipe by name and delete
+	    		return;
+	    	} else {
+	    		System.out.println("Sorry, there are no recipes to delete.");
+	    		start();
+	    	}
 	    }
 	}
 	
-	public static void addRecipe() {
-		Scanner key = new Scanner(System.in);
-    	System.out.println("You've selected to add a recipe to the book. Let's begin!");
-    	System.out.println("To begin, what is the name of the recipe?");
+	public void addRecipe() {
+    	System.out.println("You've selected to add a recipe to the book. To begin, what is the name of the recipe?");
     	String name = key.nextLine();
     	System.out.println("Good. How long does this recipe take to make?");
     	String duration = key.nextLine();
@@ -57,19 +67,66 @@ public class App {
     			recipe.addIngredient(ingredientName, ingredientMeasurement);
     		} else {
     			System.out.println("Okay, all ingredients have been added to the recipe then.");
+    			continuing = false;
     		}
     	} while (continuing == true);
     	System.out.println("This recipe is done! We're adding it to the recipe database.");
     	recipeList.add(recipe);
-    	// ask here what the user would like to do next;
-    	key.close();
-    	for (int i = 0; i < recipeList.size(); i++) {
-    		System.out.println("HERE'S A RECIPE: " + recipeList.get(i));
+		System.out.println("Would you like to add another recipe?");
+    	String recipeChoice = key.nextLine();
+		if (recipeChoice.equals("Yes") || recipeChoice.equals("yes")) {
+			addRecipe();
+		} else {
+			System.out.println("Okay - would you like to continue?");
+			String continueChoice = key.nextLine();
+			if (continueChoice.equals("Yes") || continueChoice.equals("yes")) {
+				start();
+			} else {
+				end();
+			}
+		}
+	}
+	
+	public void viewRecipe() {
+    	System.out.println("You've selected to view recipes. Would you like to view a specific recipe or see a list?");
+    	String choice;
+	    boolean correct = false;
+
+	    do {
+		    System.out.println("Choose ONE or ALL.");
+	    	choice = key.nextLine();
+	    	if (choice.equals("ONE") || choice.equals("ALL") || choice.equals("one") || choice.equals("all")) {
+	    		correct = true;
+	    	} else {
+	    		System.out.println("Incorrect choice.");
+	    	}
+	    } while (correct == false);
+	    
+    	if (choice.equals("ONE") || choice.equals("one")) {
+    		System.out.println("Okay, what is the name of the recipe you would like to look up?");
+    		
+    		// array methods - find recipe within recipeList and view it
+    		
+    	} else if (choice.equals("all") || choice.equals("ALL")) {
+    		System.out.println("Okay, here are the names of all the recipes you've saved: ");
+    		for (int i = 0; i < recipeList.size(); i++) {
+    			System.out.println("RECIPE " + (i + 1) + ": " + recipeList.get(i).name);
+    		}
+    		System.out.println("Would you like to continue?");
+    		String continueChoice = key.nextLine();
+    		if (continueChoice.equals("Yes") || continueChoice.equals("yes")) {
+    			start();
+    		} else {
+    			end();
+    		}
     	}
 	}
 	
 	public static void main(String[] args) {
-		start();
+		App app = new App();
+	    System.out.println("-----------------------");
+	    System.out.println("Welcome to the Recipe Book! To begin, choose whether you would like to view, add, or delete recipes.");
+		app.start();
 	}
 
 }
