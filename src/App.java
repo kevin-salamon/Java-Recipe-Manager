@@ -36,7 +36,7 @@ public class App {
 	    	}
 	    } else if (choice.equals("DELETE")) {
 	    	if (recipeList.size() > 0) {
-		    	// find recipe by name and delete
+		    	removeRecipe();
 	    		return;
 	    	} else {
 	    		System.out.println("Sorry, there are no recipes to delete.");
@@ -103,10 +103,7 @@ public class App {
 	    } while (correct == false);
 	    
     	if (choice.equals("ONE") || choice.equals("one")) {
-    		System.out.println("Okay, what is the name of the recipe you would like to look up?");
-    		
-    		// array methods - find recipe within recipeList and view it
-    		
+    		viewOne();
     	} else if (choice.equals("all") || choice.equals("ALL")) {
     		System.out.println("Okay, here are the names of all the recipes you've saved: ");
     		for (int i = 0; i < recipeList.size(); i++) {
@@ -120,6 +117,77 @@ public class App {
     			end();
     		}
     	}
+	}
+	
+	public void viewOne() {
+		System.out.println("Okay, what is the name of the recipe you would like to look up?");
+		boolean contains = false;
+		String recipeName;
+		do {
+    		recipeName = key.nextLine();
+    		for (int i = 0; i < recipeList.size(); i++) {
+    			if (recipeList.get(i).name.equals(recipeName)) {
+    				contains = true;
+    			}
+    		}
+    		if (contains = false) {
+    			System.out.println("Sorry - there's no recipe by that name. Please try again");
+    		}
+		} while (contains = false);
+		
+		System.out.println("Okay, we found that recipe. Here's the layout.");
+		for (Recipe recipe : recipeList) {
+			if (recipe.name.equals(recipeName)) {
+    			System.out.println("RECIPE NAME: " + recipe.name);
+    			System.out.println("RECIPE TOTAL TIME: " + recipe.duration);
+    			System.out.println("RECIPE INSTRUCTIONS: " + recipe.instructions);
+    			for (int i = 0; i < recipe.ingredientList.size(); i++) {
+    				System.out.println("INGREDIENT " + (i + 1) + ": " + recipe.ingredientList.get(i).name);
+    				System.out.println("COUNT: " + recipe.ingredientList.get(i).measurement);
+    			}
+			} else {
+				continue;
+			}
+		}
+		System.out.println("Would you like to view another recipe?");
+		String viewChoice = key.nextLine();
+		if (viewChoice.equals("YES") || viewChoice.equals("Yes") || viewChoice.equals("yes")) {
+			viewOne();
+		} else {
+    		System.out.println("Would you like to continue?");
+    		String continueChoice = key.nextLine();
+    		if (continueChoice.equals("Yes") || continueChoice.equals("yes")) {
+    			start();
+    		} else {
+    			end();
+    		}
+		}
+	}
+	
+	public void removeRecipe() {
+		System.out.println("What is the name of the recipe you would like to delete?");
+		boolean contains = false;
+		String recipeName;
+		do {
+    		recipeName = key.nextLine();
+    		for (int i = 0; i < recipeList.size(); i++) {
+    			if (recipeList.get(i).name.equals(recipeName)) {
+    				recipeList.remove(i);
+    				contains = true;
+    			}
+    		}
+    		if (contains = false) {
+    			System.out.println("Sorry - there's no recipe by that name. Please try again");
+    		}
+		} while (contains = false);
+		System.out.println("Okay, we've found that recipe and deleted it for you.");
+		System.out.println("Would you like to continue?");
+		String continueChoice = key.nextLine();
+		if (continueChoice.equals("Yes") || continueChoice.equals("yes")) {
+			start();
+		} else {
+			end();
+		}
 	}
 	
 	public static void main(String[] args) {
