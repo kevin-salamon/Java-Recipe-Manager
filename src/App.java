@@ -9,6 +9,7 @@ public class App {
 	public void end() {
 		System.out.println("You've chosen to end the program. Goodbye!");
 		key.close();
+		System.exit(0);
 	}
 
 	public void start() {
@@ -21,8 +22,12 @@ public class App {
 	    	if (choice.equals("ADD") || choice.equals("DELETE") || choice.equals("VIEW")) {
 	    		correct = true;
 	    	} else {
+		    	if (choice.equals("END") || choice.equals("End") || choice.equals("end")) {
+		    		end();
+		    	}
 	    		System.out.println("Incorrect choice.");
 	    	}
+	    	
 	    } while (correct == false);
 	    
 	    if (choice.equals("ADD")) {
@@ -95,16 +100,20 @@ public class App {
 	    do {
 		    System.out.println("Choose ONE or ALL.");
 	    	choice = key.nextLine();
-	    	if (choice.equals("ONE") || choice.equals("ALL") || choice.equals("one") || choice.equals("all")) {
+	    	if (choice.equals("ONE") || choice.equals("ALL") || choice.equals("one") || choice.equals("all") || choice.equals("All") || choice.equals("One")) {
 	    		correct = true;
 	    	} else {
 	    		System.out.println("Incorrect choice.");
 	    	}
+	    	
+	    	if (choice.equals("END") || choice.equals("End") || choice.equals("end")) {
+	    		end();
+	    	}
 	    } while (correct == false);
 	    
-    	if (choice.equals("ONE") || choice.equals("one")) {
+    	if (choice.equals("ONE") || choice.equals("one") || choice.equals("One")) {
     		viewOne();
-    	} else if (choice.equals("all") || choice.equals("ALL")) {
+    	} else if (choice.equals("all") || choice.equals("ALL") || choice.equals("All")) {
     		System.out.println("Okay, here are the names of all the recipes you've saved: ");
     		for (int i = 0; i < recipeList.size(); i++) {
     			System.out.println("RECIPE " + (i + 1) + ": " + recipeList.get(i).name);
@@ -120,20 +129,24 @@ public class App {
 	}
 	
 	public void viewOne() {
-		System.out.println("Okay, what is the name of the recipe you would like to look up?");
-		boolean contains = false;
+		System.out.println("Okay, what is the name of the recipe you would like to look up? If you don't know a recipe name, type BACK.");
+		boolean containsItem = false;
 		String recipeName;
 		do {
     		recipeName = key.nextLine();
     		for (int i = 0; i < recipeList.size(); i++) {
     			if (recipeList.get(i).name.equals(recipeName)) {
-    				contains = true;
+    				containsItem = true;
     			}
     		}
-    		if (contains = false) {
+    		if (containsItem == false) {
     			System.out.println("Sorry - there's no recipe by that name. Please try again");
     		}
-		} while (contains = false);
+	    	if (recipeName.equals("BACK") || recipeName.equals("Back") || recipeName.equals("back")) {
+	    		viewRecipe();
+	    		break;
+	    	}
+		} while (containsItem == false);
 		
 		System.out.println("Okay, we found that recipe. Here's the layout.");
 		for (Recipe recipe : recipeList) {
@@ -165,7 +178,7 @@ public class App {
 	}
 	
 	public void removeRecipe() {
-		System.out.println("What is the name of the recipe you would like to delete?");
+		System.out.println("What is the name of the recipe you would like to delete? If you don't know a recipe name, type BACK.");
 		boolean contains = false;
 		String recipeName;
 		do {
@@ -179,6 +192,10 @@ public class App {
     		if (contains = false) {
     			System.out.println("Sorry - there's no recipe by that name. Please try again");
     		}
+	    	if (recipeName.equals("BACK") || recipeName.equals("Back") || recipeName.equals("back")) {
+	    		start();
+	    		break;
+	    	}
 		} while (contains = false);
 		System.out.println("Okay, we've found that recipe and deleted it for you.");
 		System.out.println("Would you like to continue?");
